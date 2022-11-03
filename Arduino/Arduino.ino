@@ -7,7 +7,7 @@ Adafruit_MPU6050 mpu; // Accelerometer
 void printDataToSerial(sensors_event_t a, sensors_event_t t);
 
 void setup() {
-  Serial.begin(14400);
+  Serial.begin(9600);
 
   while (!Serial){}
 
