@@ -5,10 +5,10 @@ PVector arduinoData = new PVector(0, 0, 0);
 float arduinoMaxAcceleration = 0;
 Serial serial; // Serial port declaration
 
-void arduinoSetup (String port) {
+void arduinoSetup (String port, int baudRate) {
   println("Setting up Arduino...");
   
-  serial = new Serial(this, port, 14400); // (Port name, baud rate)
+  serial = new Serial(this, port, baudRate); // (Port name, baud rate)
   
   delay(500);
   for (int i=0; i<300; i++) {

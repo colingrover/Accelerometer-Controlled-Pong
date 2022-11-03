@@ -124,6 +124,11 @@ void drawBall () {
       ball.vel.x = -(speedMultiplier*ball.vel.x); // Redirect and increase x velocity by multiplier
       ball.vel.x += 20*p1.vel.x; // Impart some of paddle's x velocity to the ball
       ball.vel.y += 20*p1.vel.y; // Impart some of paddle's y velocity to the ball
+      
+      // Because of x movement allowance, collision errors may arise from the player moving into the ball after the initial condition, offset the ball's position to account for this
+      float offsetAmount = (p1.pos.x + paddleWidth/2) - (ball.pos.x - ballRadius);
+      ball.pos.x += offsetAmount>0 ? 2*offsetAmount : 0;
+      
       updateTrackerData(); // Tell AI what the player did to the ball
     } else { // If player hits ball from in front of it (thus moving it backwards)
       ball.vel.x += 20*p1.vel.x; // Impart some of paddle's x velocity to the ball

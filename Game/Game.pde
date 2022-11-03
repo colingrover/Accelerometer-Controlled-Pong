@@ -1,4 +1,4 @@
-final boolean DEBUG = false; // If true, shows tracker ball used by AI
+final boolean DEBUG = false; // If true, shows tracker ball used by AI, prints arduino readings
 final boolean ARDUINO_ENABLE = true; // false for keyboard control, true for arduino control
 final boolean RGB_ENABLE = true;//random(10)>=9; // 10% Odds of RGB mode
 
@@ -9,7 +9,7 @@ void setup () {
   textSize(0.1*canvasHeight);
   
   if (ARDUINO_ENABLE) {
-    arduinoSetup("COM6");
+    arduinoSetup("COM6", 9600);
   }
   
   resetBall(ONGOING);
