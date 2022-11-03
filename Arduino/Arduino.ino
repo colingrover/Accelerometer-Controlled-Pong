@@ -1,4 +1,3 @@
-
 #include <Adafruit_MPU6050.h> // Accelerometer
 #include <Adafruit_Sensor.h> // Accelerometer
 #include <Wire.h> // For I2C
