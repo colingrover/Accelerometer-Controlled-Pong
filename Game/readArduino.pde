@@ -4,6 +4,7 @@ import processing.serial.*;
 PVector arduinoData = new PVector(0, 0, 0);
 float arduinoMaxAcceleration = 0;
 Serial serial; // Serial port declaration
+int counterForFlushing = 0;
 
 void arduinoSetup (String port, int baudRate) {
   println("Setting up Arduino...");
@@ -25,6 +26,13 @@ void arduinoSetup (String port, int baudRate) {
 // Data coming in in the form index:value, read each line and store the given value at the given index of ArduinoData
 void getArduinoData () {
   if (serial.available() > 0) {
+    // If buffer getting too large, flush it
+    if (counterForFlushing > 300) {
+      serial.clear();
+      counterForFlushing = 0;
+      if (DEBUG) println("-------------------- Flushed buffer --------------------");
+    }
+    
     String incomingData = serial.readStringUntil('\n'); // Read a single line of the string
     if (incomingData != null) {
       String splitData [] = incomingData.split(":"); // Separate line into two element array, with items delimited by colon
@@ -32,13 +40,16 @@ void getArduinoData () {
         if (splitData.length == 2) { // Ensure 2 element array before trying to access second element
           switch (int(splitData[0].trim())) {
             case 0:
-              arduinoData.x = float(splitData[1].trim());
+              arduinoData.z = -float(splitData[1].trim());//arduinoData.x = float(splitData[1].trim());
+              counterForFlushing++;
               break;
             case 1:
-              arduinoData.y = float(splitData[1].trim());
+              arduinoData.x = -float(splitData[1].trim());//arduinoData.y = float(splitData[1].trim());
+              counterForFlushing++;
               break;
             case 2:
-              arduinoData.z = float(splitData[1].trim());
+              arduinoData.y = -float(splitData[1].trim());//arduinoData.z = float(splitData[1].trim());
+              counterForFlushing++;
               break;
           }
           //arduinoData[int(splitData[0].trim())] = float(splitData[1].trim());
