@@ -37,7 +37,7 @@ void getArduinoData () {
     if (incomingData != null) {
       String splitData [] = incomingData.split(":"); // Separate line into two element array, with items delimited by colon
       if (int(splitData[0].trim()) < 3) { // If the string with its leading and trailing spaces removed, cast to an integer, is less than the maximum expected value of an index
-        if (splitData.length == 2) { // Ensure 2 element array before trying to access second element
+        if (splitData.length == 2 && !Float.isNaN(float(splitData[1]))) { // Ensure 2 element array before trying to access second element, ensure second element valid
           switch (int(splitData[0].trim())) {
             case 0:
               arduinoData.z = -float(splitData[1].trim());//arduinoData.x = float(splitData[1].trim());
