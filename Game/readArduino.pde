@@ -40,14 +40,17 @@ void getArduinoData () {
         if (splitData.length == 2 && !Float.isNaN(float(splitData[1]))) { // Ensure 2 element array before trying to access second element, ensure second element valid
           switch (int(splitData[0].trim())) {
             case 0:
+              // Assign x acceleration to z (to make breadboard mounted accelerometer control game easier)
               arduinoData.z = -float(splitData[1].trim());//arduinoData.x = float(splitData[1].trim());
               counterForFlushing++;
               break;
             case 1:
+              // Assign y acceleration to x (to make breadboard mounted accelerometer control game easier) 
               arduinoData.x = -float(splitData[1].trim());//arduinoData.y = float(splitData[1].trim());
               counterForFlushing++;
               break;
             case 2:
+              // Assign z acceleration to y (to make breadboard mounted accelerometer control game easier)
               arduinoData.y = -float(splitData[1].trim());//arduinoData.z = float(splitData[1].trim());
               counterForFlushing++;
               break;
