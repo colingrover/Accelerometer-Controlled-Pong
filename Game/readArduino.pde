@@ -5,9 +5,18 @@ PVector arduinoData = new PVector(0, 0, 0);
 float arduinoMaxAcceleration = 0;
 Serial serial; // Serial port declaration
 int counterForFlushing = 0;
+int nullInARow = 0;
+final int maxNullInARow = 20;
+boolean rebooting = false;
+int rebootTime = 0;
 
 void arduinoSetup (String port, int baudRate) {
   println("Setting up Arduino...");
+  
+  println("Ports detected:");
+  printArray(Serial.list());
+  print("Using port: ");
+  println(port);
   
   serial = new Serial(this, port, baudRate); // (Port name, baud rate)
   
@@ -23,6 +32,23 @@ void arduinoSetup (String port, int baudRate) {
   println("Arduino setup complete.");
 }
 
+// Temporary fix, informs user of error, reboots serial port
+void rebootArduino () {
+  rebooting = true;
+  rebootTime = millis();
+  thread("serialRestart"); // Start serial port reset on new thread to allow for rendering of error text on screen during the process
+}
+
+// Handles most of work for rebootArduino(), just on separate thread
+void serialRestart () {
+  println("Rebooting Arduino due to error...");
+  serial.stop(); // Close serial port
+  delay(10000); // Halt program for 10 seconds to allow port to fully close
+  arduinoSetup(serialPort, baudRate); // Reboot serial port
+  println("Reboot successful!");
+  rebooting = false;
+}
+
 // Data coming in in the form index:value, read each line and store the given value at the given index of ArduinoData
 void getArduinoData () {
   if (serial.available() > 0) {
@@ -34,7 +60,13 @@ void getArduinoData () {
     }
     
     String incomingData = serial.readStringUntil('\n'); // Read a single line of the string
+    /*
+     * ERROR HERE!!! SOMETIMES THIS ALWAYS EVALUATES TO FALSE (i.e. is null) AFTER A CERTAIN POINT AND NO FURTHER DATA WILL BE READ... NOT SURE WHY.
+     * I think it may be result of overly high baud rate? Having issues with changing HC05's baud though.
+     * Temporary solution: force serial reboot when it evaluates false enough times in a row
+     */
     if (incomingData != null) {
+      nullInARow = 0;
       String splitData [] = incomingData.split(":"); // Separate line into two element array, with items delimited by colon
       if (int(splitData[0].trim()) < 3) { // If the string with its leading and trailing spaces removed, cast to an integer, is less than the maximum expected value of an index
         if (splitData.length == 2 && !Float.isNaN(float(splitData[1]))) { // Ensure 2 element array before trying to access second element, ensure second element valid
@@ -55,9 +87,11 @@ void getArduinoData () {
               counterForFlushing++;
               break;
           }
-          //arduinoData[int(splitData[0].trim())] = float(splitData[1].trim());
         }
       }
+    } else {
+      nullInARow++;
+      if (nullInARow > maxNullInARow) rebootArduino();
     }
   }
 }

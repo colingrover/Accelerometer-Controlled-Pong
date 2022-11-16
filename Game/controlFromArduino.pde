@@ -1,7 +1,7 @@
 final int accelerationScaleFactor = 2;
 
 void controlFromArduino () {
-  getArduinoData(); // Fetch new acceleration info
+  getArduinoData(); // Fetch new acceleration info 
   
   if (DEBUG) {
     println(arduinoData);
