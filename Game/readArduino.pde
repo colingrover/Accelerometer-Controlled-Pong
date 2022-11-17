@@ -1,12 +1,11 @@
 import processing.serial.*;
 
-//float arduinoData [] = {0, 0, 0}; // x, y, z
 PVector arduinoData = new PVector(0, 0, 0);
-float arduinoMaxAcceleration = 0;
+float arduinoMaxAcceleration = 1; // Gets updated
 Serial serial; // Serial port declaration
 int counterForFlushing = 0;
 int nullInARow = 0;
-final int maxNullInARow = 20;
+final int maxNullInARow = 100*(9600/BAUDRATE);
 boolean rebooting = false;
 int rebootTime = 0;
 
@@ -15,8 +14,23 @@ void arduinoSetup (String port, int baudRate) {
   
   println("Ports detected:");
   printArray(Serial.list());
-  print("Using port: ");
-  println(port);
+  print("Checking for port: ");
+  print(port);
+  print("..");
+  
+  boolean doesPortExist = false;
+  while (!doesPortExist) {
+    String sList [] = Serial.list();
+    for (int i=0; i<sList.length; i++) {
+      if (sList[i].contains(port)) {
+        doesPortExist = true;
+        break;
+      }
+    }
+    print(".");
+  }
+  
+  println("\nFound requested port");
   
   serial = new Serial(this, port, baudRate); // (Port name, baud rate)
   
@@ -32,7 +46,7 @@ void arduinoSetup (String port, int baudRate) {
   println("Arduino setup complete.");
 }
 
-// Temporary fix, informs user of error, reboots serial port
+// "Temporary" fix, informs user of error, reboots serial port
 void rebootArduino () {
   rebooting = true;
   rebootTime = millis();
@@ -43,8 +57,9 @@ void rebootArduino () {
 void serialRestart () {
   println("Rebooting Arduino due to error...");
   serial.stop(); // Close serial port
-  delay(10000); // Halt program for 10 seconds to allow port to fully close
-  arduinoSetup(serialPort, baudRate); // Reboot serial port
+  delay(10000*(9600/BAUDRATE)); // Halt program for 10 seconds to allow port to fully close
+  serial.stop(); // Call this again, not sure why it helps with port busy errors but it does
+  arduinoSetup(SERIALPORT, BAUDRATE); // Reboot serial port
   println("Reboot successful!");
   rebooting = false;
 }
@@ -62,7 +77,7 @@ void getArduinoData () {
     String incomingData = serial.readStringUntil('\n'); // Read a single line of the string
     /*
      * ERROR HERE!!! SOMETIMES THIS ALWAYS EVALUATES TO FALSE (i.e. is null) AFTER A CERTAIN POINT AND NO FURTHER DATA WILL BE READ... NOT SURE WHY.
-     * I think it may be result of overly high baud rate? Having issues with changing HC05's baud though.
+     * Tried changing baud rates of arduino, sketch, HC-05... didn't help.
      * Temporary solution: force serial reboot when it evaluates false enough times in a row
      */
     if (incomingData != null) {

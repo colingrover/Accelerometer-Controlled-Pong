@@ -1,8 +1,8 @@
 final boolean DEBUG = false; // If true, shows tracker ball used by AI, prints arduino readings
 final boolean ARDUINO_ENABLE = true; // false for keyboard control, true for arduino control
 final boolean RGB_ENABLE = true;//random(10)>=9; // 10% Odds of RGB mode
-final String serialPort = "COM8";
-final int baudRate = 9600;
+final String SERIALPORT = "COM8";
+final int BAUDRATE = 9600;
 
 void setup () {
   size(1024, 512);
@@ -11,7 +11,7 @@ void setup () {
   textSize(0.1*canvasHeight);
   
   if (ARDUINO_ENABLE) {
-    arduinoSetup(serialPort, baudRate);
+    arduinoSetup(SERIALPORT, BAUDRATE);
   }
   
   resetBall(ONGOING);
@@ -53,7 +53,7 @@ void draw () {
     scores();
   } else {
     text("Sorry, there's been an error - rebooting Arduino", canvasHeight, canvasHeight/3);
-    text(13-((int)millis()-rebootTime)/1000, canvasHeight, 2*canvasHeight/3);
+    text((3+(10*(9600/BAUDRATE)))-((int)millis()-rebootTime)/1000, canvasHeight, 2*canvasHeight/3);
   }
 }
 
