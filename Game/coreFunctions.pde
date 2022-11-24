@@ -1,7 +1,5 @@
 final boolean ONGOING = true;
 final boolean GAME_OVER = false;
-final int canvasHeight = 512;
-final int canvasWidth = 2*canvasHeight;
 final int fps = 200;
 final float paddleWidth = (2.0/512)*canvasWidth;
 final float paddleLength = (28.0/256)*canvasHeight;
@@ -9,7 +7,6 @@ final float paddleSpeed = (4.0/256)*canvasHeight/(fps/60);
 final float ballRadius = (3.0/512)*canvasWidth;
 final float maxBallSpeed = ((7.0/512)*canvasWidth)/(fps/30);
 final float speedMultiplier = 1.1;
-final float difficultyMultiplier = 0.65; // >=1 for easy, 0.65 for medium, 0.5 for hard, 0 for impossible
 int resetTimer = 0;
 int hue = 0;
 
