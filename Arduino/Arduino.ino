@@ -4,7 +4,7 @@
 
 Adafruit_MPU6050 mpu; // Accelerometer
 
-void printDataToSerial(sensors_event_t a, sensors_event_t t);
+void printDataToSerial(sensors_event_t a);
 
 void setup() {
   Serial.begin(9600);
@@ -36,11 +36,11 @@ void loop() {
   sensors_event_t a, g, t; // Acceleration, gyroscopic reading, temperature (from MPU6050)
   mpu.getEvent(&a, &g, &t);
 
-  printDataToSerial(a, t);
+  printDataToSerial(a);
 }
 // ------------------------ ^MAIN LOOP^ ------------------------ //
 
-void printDataToSerial(sensors_event_t a, sensors_event_t t) {
+void printDataToSerial(sensors_event_t a) {
   float arr [] = {a.acceleration.x, a.acceleration.y, a.acceleration.z};
   for (int i=0; i<sizeof(arr)/sizeof(arr [0]); i++) {
     Serial.print(i);
