@@ -22,10 +22,10 @@ void setup() {
   Serial.println("Accelerometer connected.");
 
   // set accelerometer range to +-2G (Options: 2, 4, 8, 16) 
-  mpu.setAccelerometerRange(MPU6050_RANGE_2_G); // !!! FINE TUNE THIS !!!
+  mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
 
   // set low pass filter bandwidth to 21 Hz (Options: 5, 10, 21, 44, 94, 184, 260)
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ); // !!! FINE TUNE THIS !!!
+  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 
   delay(100);
 }
@@ -47,5 +47,4 @@ void printDataToSerial(sensors_event_t a) {
     Serial.print(":");
     Serial.println(arr[i]);
   }
-  //delay(5);
 }
