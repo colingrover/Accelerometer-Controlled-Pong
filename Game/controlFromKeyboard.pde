@@ -1,21 +1,21 @@
 // Handle key presses
 void keyPressed () {
-  if (key == 'w' || key == 'W') {
+  if (key == 'w' || key == 'W' || keyCode == UP) {
       wPressed = true;
     }
     
-    if (key == 's' || key == 'S') {
+    if (key == 's' || key == 'S' || keyCode == DOWN) {
       sPressed = true;
     }
 }
 
 // Handle key releases
 void keyReleased () {
-  if (key == 'w' || key == 'W') {
+  if (key == 'w' || key == 'W' || keyCode == UP) {
       wPressed = false;
     }
     
-    if (key == 's' || key == 'S') {
+    if (key == 's' || key == 'S' || keyCode == DOWN) {
       sPressed = false;
     }
 }
