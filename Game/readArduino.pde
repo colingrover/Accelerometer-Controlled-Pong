@@ -23,21 +23,23 @@ void arduinoSetup (int baudRate) {
     String sList [] = Serial.list();
     
     for (int i=0; i<sList.length; i++) {
-print("Trying port: ");
-println(sList[i]);
       serial = new Serial(this, sList[i], 9600); // Open serial port
       delay(10);
+      
       if (serial.available() > 0) { // Check if any data is being sent over active port
         doesPortExist = true; // If so, assume it is the one we want to be using
-        SERIALPORT = sList[i];
-        print("\nUsing port: ");
+        SERIALPORT = sList[i]; // Assign global
+        
+        print("Using port: ");
         println(SERIALPORT);
+        
         break;
       } else {
         serial.stop(); // Otherwise, close the port and check the next
         delay(10);
       }
     }
+    if (!doesPortExist) println("No active ports found, checking again...");
   }
   
   delay(500);
