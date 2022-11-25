@@ -1,5 +1,7 @@
 import processing.serial.*;
 
+String SERIALPORT; // Name of bluetooth serial port that receives data from Arduino
+
 PVector arduinoData = new PVector(0, 0, 0);
 float arduinoMaxAcceleration = 1; // Gets updated
 Serial serial; // Serial port declaration
@@ -9,30 +11,34 @@ final int maxNullInARow = 100*(9600/BAUDRATE);
 boolean rebooting = false;
 int rebootTime = 0;
 
-void arduinoSetup (String port, int baudRate) {
+void arduinoSetup (int baudRate) {
   println("Setting up Arduino...");
   
   println("Ports detected:");
   printArray(Serial.list());
-  print("Checking for port: ");
-  print(port);
-  print("..");
+  println("Checking for active port... ");
   
   boolean doesPortExist = false;
   while (!doesPortExist) {
     String sList [] = Serial.list();
+    
     for (int i=0; i<sList.length; i++) {
-      if (sList[i].contains(port)) {
-        doesPortExist = true;
+print("Trying port: ");
+println(sList[i]);
+      serial = new Serial(this, sList[i], 9600); // Open serial port
+      delay(10);
+      if (serial.available() > 0) { // Check if any data is being sent over active port
+        doesPortExist = true; // If so, assume it is the one we want to be using
+        SERIALPORT = sList[i];
+        print("\nUsing port: ");
+        println(SERIALPORT);
         break;
+      } else {
+        serial.stop(); // Otherwise, close the port and check the next
+        delay(10);
       }
     }
-    print(".");
   }
-  
-  println("\nFound requested port");
-  
-  serial = new Serial(this, port, baudRate); // (Port name, baud rate)
   
   delay(500);
   for (int i=0; i<300; i++) {
@@ -59,7 +65,7 @@ void serialRestart () {
   serial.stop(); // Close serial port
   delay(10000*(9600/BAUDRATE)); // Halt program for 10 seconds to allow port to fully close
   serial.stop(); // Call this again, not sure why it helps with port busy errors but it does
-  arduinoSetup(SERIALPORT, BAUDRATE); // Reboot serial port
+  arduinoSetup(BAUDRATE); // Reboot serial port
   println("Reboot successful!");
   rebooting = false;
 }

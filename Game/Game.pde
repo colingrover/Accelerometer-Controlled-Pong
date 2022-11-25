@@ -5,7 +5,7 @@ void setup () {
   textSize(0.1*canvasHeight);
   
   if (ARDUINO_ENABLE) {
-    arduinoSetup(SERIALPORT, BAUDRATE);
+    arduinoSetup(BAUDRATE);
   }
   
   resetBall(ONGOING);
