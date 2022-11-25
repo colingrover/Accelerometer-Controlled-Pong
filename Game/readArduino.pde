@@ -67,8 +67,8 @@ void serialRestart () {
 // Data coming in in the form index:value, read each line and store the given value at the given index of ArduinoData
 void getArduinoData () {
   if (serial.available() > 0) {
-    // If buffer getting too large, flush it
-    if (counterForFlushing > 300) {
+    // Ensure buffer doesn't grow too large
+    if (counterForFlushing > 5) {
       serial.clear();
       counterForFlushing = 0;
       if (DEBUG) println("-------------------- Flushed buffer --------------------");
@@ -79,6 +79,7 @@ void getArduinoData () {
      * ERROR HERE!!! SOMETIMES THIS ALWAYS EVALUATES TO FALSE (i.e. is null) AFTER A CERTAIN POINT AND NO FURTHER DATA WILL BE READ... NOT SURE WHY.
      * Tried changing baud rates of arduino, sketch, HC-05... didn't help.
      * Temporary solution: force serial reboot when it evaluates false enough times in a row
+     * Using PCB instead of breadboard mostly fixed this issue, may have stemmed from poor wiring... leaving this here so I don't have to hunt for the error source if it comes back later
      */
     if (incomingData != null) {
       nullInARow = 0;
