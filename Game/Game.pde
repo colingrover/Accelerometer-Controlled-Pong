@@ -50,9 +50,3 @@ void draw () {
     text((3+(10*(9600/BAUDRATE)))-((int)millis()-rebootTime)/1000, canvasHeight, 2*canvasHeight/3);
   }
 }
-
-/* NOTES
- *   Add barriers for the paddles once arduino is implemented, as controls will likely be more finicky
- *
- *   Change way data is read so that three items are read at once, then buffer is cleared (if it works ig)
- */
