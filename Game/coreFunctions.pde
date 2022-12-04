@@ -10,9 +10,6 @@ final float speedMultiplier = 1.1;
 int resetTimer = 0;
 int hue = 0;
 
-// Delete these after arduino implementation
-boolean wPressed, sPressed;
-
 class Player {
   PVector pos;
   PVector prevPos;

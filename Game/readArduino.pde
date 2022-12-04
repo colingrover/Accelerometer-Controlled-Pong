@@ -72,7 +72,7 @@ void serialRestart () {
   rebooting = false;
 }
 
-// Data coming in in the form index:value, read each line and store the given value at the given index of ArduinoData
+// Data coming in in the form index:value, read each line and store the given value at the given axis of ArduinoData
 void getArduinoData () {
   if (serial.available() > 0) {
     // Ensure buffer doesn't grow too large

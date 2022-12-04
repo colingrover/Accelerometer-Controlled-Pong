@@ -1,3 +1,5 @@
+boolean wPressed, sPressed;
+
 // Handle key presses
 void keyPressed () {
   if (key == 'w' || key == 'W' || keyCode == UP) {
